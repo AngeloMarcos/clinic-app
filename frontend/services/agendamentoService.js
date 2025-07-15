@@ -1,11 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3001/appointments'
+const API_URL = process.env.NEXT_PUBLIC_API_URL + '/appointments'
 
-export const cadastrarAgendamento = async (dados) => {
-  return axios.post(API_URL, dados)
-}
-
-export const listarAgendamentos = async () => {
-  return axios.get(API_URL)
-}
+export const cadastrarAgendamento = async (dados) => axios.post(API_URL, dados)
+export const listarAgendamentos = async () => axios.get(API_URL)
