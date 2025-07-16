@@ -27,4 +27,15 @@ export class PatientService {
     }
     return patient;
   }
+      async update(id: number, dto: CreatePatientDto): Promise<Patient> {
+      const patient = await this.findOne(id);
+      Object.assign(patient, dto);
+      return await this.patientRepository.save(patient);
+    }
+
+    async remove(id: number): Promise<void> {
+      const patient = await this.findOne(id);
+      await this.patientRepository.remove(patient);
+    }
+
 }

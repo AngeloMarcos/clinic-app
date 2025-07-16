@@ -15,6 +15,16 @@ export class ProfessionalService {
     const professional = this.professionalRepository.create(dto);
     return await this.professionalRepository.save(professional);
   }
+  async update(id: number, dto: CreateProfessionalDto): Promise<Professional> {
+  const professional = await this.findOne(id);
+  Object.assign(professional, dto);
+  return await this.professionalRepository.save(professional);
+}
+
+async remove(id: number): Promise<void> {
+  const professional = await this.findOne(id);
+  await this.professionalRepository.remove(professional);
+}
 
   async findAll(): Promise<Professional[]> {
     return await this.professionalRepository.find();

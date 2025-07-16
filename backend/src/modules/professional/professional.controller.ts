@@ -1,33 +1,35 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+  Controller, Get, Post, Body, Param, Delete, Put
+} from '@nestjs/common';
 import { ProfessionalService } from './professional.service';
-import { Professional } from './professional.entity';
+import { CreateProfessionalDto } from './dto/create-professional.dto';
 
 @Controller('professionals')
 export class ProfessionalController {
   constructor(private readonly professionalService: ProfessionalService) {}
 
+  @Post()
+  create(@Body() dto: CreateProfessionalDto) {
+    return this.professionalService.create(dto);
+  }
+
   @Get()
-  findAll(): Promise<Professional[]> {
+  findAll() {
     return this.professionalService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Professional> {
-    return this.professionalService.findOne(id);
-  }
-
-  @Post()
-  create(@Body() professional: Professional): Promise<Professional> {
-    return this.professionalService.create(professional);
+  findOne(@Param('id') id: string) {
+    return this.professionalService.findOne(+id);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() professional: Partial<Professional>): Promise<Professional> {
-    return this.professionalService.update(id, professional);
+  update(@Param('id') id: string, @Body() dto: CreateProfessionalDto) {
+    return this.professionalService.update(+id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.professionalService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.professionalService.remove(+id);
   }
 }
