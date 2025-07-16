@@ -1,15 +1,23 @@
-import { IsNotEmpty, IsUUID, IsDateString } from 'class-validator';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { AppointmentService } from '../appointment.service';
+import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 
-export class CreateAppointmentDto {
-  @IsUUID()
-  @IsNotEmpty()
-  patientId: string;
+@Controller('appointments')
+export class AppointmentController {
+  constructor(private readonly appointmentService: AppointmentService) {}
 
-  @IsUUID()
-  @IsNotEmpty()
-  professionalId: string;
+  @Post()
+  create(@Body() createAppointmentDto: CreateAppointmentDto) {
+    return this.appointmentService.create(createAppointmentDto);
+  }
 
-  @IsDateString()
-  @IsNotEmpty()
-  date: string;
+  @Get()
+  findAll() {
+    return this.appointmentService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.appointmentService.findOne(+id);
+  }
 }

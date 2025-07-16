@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Professional } from './professional.entity';
+import { CreateProfessionalDto } from './dto/create-professional.dto';
 
 @Injectable()
 export class ProfessionalService {
@@ -10,24 +11,20 @@ export class ProfessionalService {
     private readonly professionalRepository: Repository<Professional>,
   ) {}
 
-  findAll(): Promise<Professional[]> {
-    return this.professionalRepository.find();
+  async create(dto: CreateProfessionalDto): Promise<Professional> {
+    const professional = this.professionalRepository.create(dto);
+    return await this.professionalRepository.save(professional);
   }
 
-  findOne(id: number): Promise<Professional> {
-    return this.professionalRepository.findOneBy({ id });
+  async findAll(): Promise<Professional[]> {
+    return await this.professionalRepository.find();
   }
 
-  create(professional: Professional): Promise<Professional> {
-    return this.professionalRepository.save(professional);
-  }
-
-  async update(id: number, updated: Partial<Professional>): Promise<Professional> {
-    await this.professionalRepository.update(id, updated);
-    return this.findOne(id);
-  }
-
-  async remove(id: number): Promise<void> {
-    await this.professionalRepository.delete(id);
+  async findOne(id: number): Promise<Professional> {
+    const professional = await this.professionalRepository.findOne({ where: { id } });
+    if (!professional) {
+      throw new NotFoundException(`Profissional com ID ${id} não encontrado.`);
+    }
+    return professional;
   }
 }
